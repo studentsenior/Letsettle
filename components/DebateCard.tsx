@@ -2,9 +2,11 @@ import Link from 'next/link';
 import VoteButton from './VoteButton';
 import ShareButton from './ShareButton';
 import { Debate } from '@/lib/types';
+import { formatDistanceToNow } from 'date-fns';
 
 export default function DebateCard({ debate }: { debate: Debate }) { 
   const d = debate;
+  const isTrending = d.totalVotes > 200;
 
   return (
     <div 
@@ -15,18 +17,35 @@ export default function DebateCard({ debate }: { debate: Debate }) {
         borderRadius: 'var(--radius-sm)'
       }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div 
-          className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide"
-          style={{ color: 'var(--color-text-tertiary)' }}
-        >
-          <span>{d.category}</span>
-          {d.subCategory && (
-            <>
-              <span>·</span>
-              <span>{d.subCategory}</span>
-            </>
-          )}
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex-1">
+          <div 
+            className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide mb-1"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            <span>{d.category}</span>
+            {d.subCategory && (
+              <>
+                <span>·</span>
+                <span>{d.subCategory}</span>
+              </>
+            )}
+            {isTrending && (
+              <>
+                <span>·</span>
+                <span className="flex items-center gap-1" style={{ color: 'var(--color-accent)' }}>
+                  🔥<span className="hidden lg:inline"> Trending</span>
+                </span>
+              </>
+            )}
+          </div>
+          {/* Timestamp */}
+          <div 
+            className="text-xs"
+            style={{ color: 'var(--color-text-tertiary)' }}
+          >
+            {formatDistanceToNow(new Date(d.createdAt), { addSuffix: true })}
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <div 

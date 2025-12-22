@@ -2,16 +2,41 @@ import dbConnect from "@/lib/db";
 import Debate from "@/models/Debate";
 import Option from "@/models/Option";
 import DebateCard from "@/components/DebateCard";
+import SortSelector from "@/components/SortSelector";
+import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
 
-async function getAllDebates() {
+const DEBATES_PER_PAGE = 12;
+
+interface PageProps {
+  searchParams: { page?: string; sort?: string };
+}
+
+async function getAllDebates(page: number, sortBy: string) {
   await dbConnect();
   
-  const debates = await Debate.find({ isActive: true })
-    .sort({ totalVotes: -1 })
-    .lean();
+  const skip = (page - 1) * DEBATES_PER_PAGE;
+  
+  // Define sort options
+  const sortOptions: Record<string, any> = {
+    trending: { totalVotes: -1 },
+    newest: { createdAt: -1 },
+    'most-voted': { totalVotes: -1 }
+  };
+  
+  const sort = sortOptions[sortBy] || sortOptions.trending;
+  
+  const [debates, total] = await Promise.all([
+    Debate.find({ isActive: true })
+      .sort(sort)
+      .skip(skip)
+      .limit(DEBATES_PER_PAGE)
+      .select('slug title description category subCategory totalVotes createdAt')
+      .lean(),
+    Debate.countDocuments({ isActive: true })
+  ]);
 
   const debatesWithOptions = await Promise.all(
     debates.map(async (debate) => {
@@ -23,7 +48,11 @@ async function getAllDebates() {
     })
   );
 
-  return debatesWithOptions;
+  return {
+    debates: debatesWithOptions,
+    total,
+    totalPages: Math.ceil(total / DEBATES_PER_PAGE)
+  };
 }
 
 export const metadata = {
@@ -31,13 +60,16 @@ export const metadata = {
   description: 'Browse all active debates sorted by popularity',
 };
 
-export default async function AllDebatesPage() {
-  const debates = await getAllDebates();
+export default async function AllDebatesPage({ searchParams }: PageProps) {
+  const page = parseInt(searchParams.page || '1');
+  const sortBy = searchParams.sort || 'trending';
+  
+  const { debates, total, totalPages } = await getAllDebates(page, sortBy);
 
   return (
-    <div className="pb-20" style={{ paddingTop: 'var(--space-3xl)' }}>
+    <div className="pb-20">
       {/* Header */}
-      <section 
+      {/* <section 
         className="py-12 px-6 text-center"
         style={{ 
           backgroundColor: 'var(--color-base-bg)',
@@ -62,49 +94,58 @@ export default async function AllDebatesPage() {
               lineHeight: '1.6'
             }}
           >
-            Browse all active debates sorted by popularity
+            Browse all active debates
           </p>
         </div>
-      </section>
+      </section> */}
 
       {/* All Debates Grid */}
       <section 
         className="max-w-6xl mx-auto px-2 sm:px-4 md:px-6"
-        style={{ paddingTop: 'var(--space-3xl)' }}
+        style={{ paddingTop: 'var(--space-2xl)' }}
       >
-        <div className="flex items-center mb-8">
-          <div>
-            <h2 
-              className="font-bold mb-2 text-base sm:text-xl"
-              style={{ 
-                color: 'var(--color-text-primary)',
-             
-              }}
-            >
-              {debates.length} Active Debates
-            </h2>
-            <div 
-              style={{ 
-                width: '60px',
-                height: '2px',
-                backgroundColor: 'var(--color-accent)'
-              }}
-            />
+        {/* Header with Sort */}
+        <div className="mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div>
+              <h2 
+                className="font-bold mb-2 text-base sm:text-xl"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                {total} Active Debates
+              </h2>
+              <div 
+                style={{ 
+                  width: '60px',
+                  height: '2px',
+                  backgroundColor: 'var(--color-accent)'
+                }}
+              />
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-4">
+              <SortSelector />
+
+              <Link 
+                href="/" 
+                className="hidden sm:block text-sm font-medium hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                ← Back to Home
+              </Link>
+              <Link 
+                href="/" 
+                className="sm:hidden text-sm font-medium hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--color-text-secondary)' }}
+              >
+                ← Back
+              </Link>
+            </div>
           </div>
-          <Link 
-            href="/" 
-            className="hidden sm:block ml-auto text-sm font-medium hover:opacity-70 transition-opacity"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            ← Back to Home
-          </Link>
-            <Link 
-            href="/" 
-            className="sm:hidden ml-auto text-sm font-medium hover:opacity-70 transition-opacity"
-            style={{ color: 'var(--color-text-secondary)' }}
-          >
-            ← Back
-          </Link>
+
+          {/* Search Bar */}
+          <SearchBar />
         </div>
 
         {debates.length === 0 ? (
@@ -139,11 +180,50 @@ export default async function AllDebatesPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {debates.map((debate: any) => (
-              <DebateCard key={debate._id} debate={debate} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {debates.map((debate: any) => (
+                <DebateCard key={debate._id} debate={debate} />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center items-center gap-2">
+                {page > 1 && (
+                  <Link
+                    href={`/all-debates?page=${page - 1}&sort=${sortBy}`}
+                    className="px-4 py-2 text-sm font-medium transition-all hover:opacity-70"
+                    style={{
+                      border: '1px solid var(--color-base-border)',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                  >
+                    ← Previous
+                  </Link>
+                )}
+
+                <span className="px-4 py-2 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                  Page {page} of {totalPages}
+                </span>
+
+                {page < totalPages && (
+                  <Link
+                    href={`/all-debates?page=${page + 1}&sort=${sortBy}`}
+                    className="px-4 py-2 text-sm font-medium transition-all hover:opacity-70"
+                    style={{
+                      border: '1px solid var(--color-base-border)',
+                      borderRadius: 'var(--radius-sm)',
+                      color: 'var(--color-text-primary)'
+                    }}
+                  >
+                    Next →
+                  </Link>
+                )}
+              </div>
+            )}
+          </>
         )}
       </section>
     </div>

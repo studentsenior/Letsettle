@@ -21,10 +21,17 @@ const DebateSchema: Schema = new Schema(
     subCategory: { type: String, index: true },
     totalVotes: { type: Number, default: 0, index: true },
     isActive: { type: Boolean, default: true },
-    isMoreOptionAllowed: { type: Boolean, default: true }, // Added this field
+    isMoreOptionAllowed: { type: Boolean, default: true },
   },
   { timestamps: true }
 );
+
+// Compound indexes for common query patterns
+DebateSchema.index({ category: 1, totalVotes: -1 });      // Category page with sorting
+DebateSchema.index({ isActive: 1, totalVotes: -1 });     // Homepage trending debates
+DebateSchema.index({ isActive: 1, createdAt: -1 });      // Recent active debates
+DebateSchema.index({ category: 1, createdAt: -1 });      // Recent debates by category
+DebateSchema.index({ isActive: 1, category: 1, totalVotes: -1 }); // Category filtering with trending
 
 // Prevent compiling model multiple times in development
 const Debate: Model<IDebate> =

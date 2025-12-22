@@ -14,4 +14,5 @@ export interface Debate {
   totalVotes: number;
   isMoreOptionAllowed?: boolean;
   options: Option[];
+  createdAt: string;
 }
