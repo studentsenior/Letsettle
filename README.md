@@ -348,8 +348,8 @@ This project is licensed under the MIT License.
 ## 👤 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Website: [yourwebsite.com](https://yourwebsite.com)
+- GitHub: [@mohdrafey1](https://github.com/mohdrafey1)
+- Website: [rafey.space](https://rafey.space)
 
 ## 🙏 Acknowledgments
 
