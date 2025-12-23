@@ -17,70 +17,138 @@
 
 ## 📋 Table of Contents
 
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
-- [Environment Variables](#-environment-variables)
-- [Database Schema](#-database-schema)
-- [API Routes](#-api-routes)
-- [Project Structure](#-project-structure)
-- [Deployment](#-deployment)
-- [Contributing](#-contributing)
+-   [Features](#-features)
+-   [Tech Stack](#-tech-stack)
+-   [Getting Started](#-getting-started)
+-   [Environment Variables](#-environment-variables)
+-   [Database Schema](#-database-schema)
+-   [API Routes](#-api-routes)
+-   [Project Structure](#-project-structure)
+-   [Deployment](#-deployment)
+-   [Contributing](#-contributing)
 
 ---
 
 ## ✨ Features
 
 ### Core Functionality
-- 🗳️ **Create Debates** - Start debates with multiple voting options
-- 📊 **Live Voting** - Real-time vote counting and ranking
-- 🔄 **Vote Changing** - Users can change their vote anytime
-- 📈 **Live Rankings** - Options ranked by votes
-- ➕ **Add Options** - Suggest new options to existing debates
+
+-   🗳️ **Create Debates** - Start debates with multiple voting options
+-   📊 **Live Voting** - Real-time vote counting and ranking
+-   🔄 **Vote Changing** - Users can change their vote anytime
+-   📈 **Live Rankings** - Options ranked by votes
+-   ➕ **Add Options** - Suggest new options to existing debates
 
 ### User Experience
-- 🎯 **No Registration Required** - Vote anonymously
-- 🔒 **Fraud Prevention** - IP + fingerprint vote tracking
-- 📱 **Fully Responsive** - Mobile-first design
-- 🌙 **Clean Minimal UI** - No distractions, pure content
-- 🔍 **Search & Filter** - Find debates by category or keyword
-- 📄 **Pagination** - Browse large debate collections efficiently
-- 📊 **Sorting Options** - Sort by trending, newest, or most voted
+
+-   🎯 **No Registration Required** - Vote anonymously
+-   🔒 **Fraud Prevention** - IP + fingerprint vote tracking
+-   📱 **Fully Responsive** - Mobile-first design
+-   🌙 **Clean Minimal UI** - No distractions, pure content
+-   🔍 **Search & Filter** - Find debates by category or keyword
+-   📄 **Pagination** - Browse large debate collections efficiently
+-   📊 **Sorting Options** - Sort by trending, newest, or most voted
 
 ### Social Features
-- 🔗 **Share Debates** - Copy link or share to social media
-- 📱 **Social Sharing** - Twitter, Facebook, LinkedIn, WhatsApp integration
-- 🏆 **Trending Debates** - Discover popular discussions
+
+-   🔗 **Share Debates** - Copy link or share to social media
+-   📱 **Social Sharing** - Twitter, Facebook, LinkedIn, WhatsApp integration
+-   🏆 **Trending Debates** - Discover popular discussions
 
 ### Technical Features
-- ⚡ **Server-Side Rendering** - Fast initial page loads
-- 🎨 **Design System** - Consistent CSS variables
-- 🔄 **Optimistic Updates** - Instant UI feedback
-- 📊 **SEO Optimized** - Meta tags, OpenGraph, JSON-LD schema
-- 🗄️ **Database Indexes** - Optimized query performance
-- 🔐 **Input Validation** - Server and client-side validation
+
+-   ⚡ **Server-Side Rendering** - Fast initial page loads
+-   🎨 **Design System** - Consistent CSS variables
+-   🔄 **Optimistic Updates** - Instant UI feedback
+-   📊 **SEO Optimized** - Meta tags, OpenGraph, JSON-LD schema
+-   🗄️ **Database Indexes** - Optimized query performance
+-   🔐 **Input Validation** - Server and client-side validation
 
 ---
 
-## 🛠️ Tech Stack
+## �️ Content Moderation System
+
+Letsettle includes a comprehensive moderation system to ensure high-quality debates.
+
+### Input Validation
+
+**Automatic checks prevent spam and low-quality content:**
+
+-   Title: 10-150 characters
+-   Description: Max 500 characters
+-   Options: 2-50 characters each
+-   Blocks excessive caps (max 50% uppercase)
+-   Prevents emoji-only submissions
+-   Detects spam patterns
+
+### Pre-Moderation Queue
+
+**All new debates require admin approval:**
+
+-   Debates created with `pending` status
+-   Only `approved` debates visible to public
+-   Options remain unmoderated for smooth UX
+
+### Admin Panel
+
+Access at `/admin` with full management capabilities:
+
+| Route            | Purpose                          |
+| ---------------- | -------------------------------- |
+| `/admin`         | Dashboard with statistics        |
+| `/admin/login`   | Secure admin authentication      |
+| `/admin/pending` | Review & approve/reject debates  |
+| `/admin/debates` | Manage all debates (edit/delete) |
+| `/admin/options` | View & delete user options       |
+
+**Admin Features:**
+
+-   ✅ Approve debates with one clickdebates with optional reason
+-   ✏️ Edit debate details (title, category, status, settings)
+-   🗑️ Delete debates (cascade deletes all options)
+-   🔍 Search & filter by status/category
+-   📄 Pagination for large datasets
+
+### Admin Setup
+
+1. **Add credentials to `.env.local`:**
+
+    ```env
+    ADMIN_USERNAME=admin
+    ADMIN_PASSWORD=YourSecurePassword123
+    ADMIN_SECRET_TOKEN=GenerateRandomToken456
+    ```
+
+2. **Login at `/admin/login`**
+
+3. **Start moderating at `/admin/pending`**
+
+> ⚠️ **Security Note**: Current implementation uses simple token auth for MVP. For production, implement JWT, bcrypt password hashing, and proper session management.
+
+---
+
+## �🛠️ Tech Stack
 
 ### Frontend
-- **Framework**: [Next.js 14.2](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + CSS Variables
-- **UI Components**: Custom components with Lucide icons
-- **Notifications**: [Sonner](https://sonner.emilkowal.ski/)
+
+-   **Framework**: [Next.js 14.2](https://nextjs.org/) (App Router)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/) + CSS Variables
+-   **UI Components**: Custom components with Lucide icons
+-   **Notifications**: [Sonner](https://sonner.emilkowal.ski/)
 
 ### Backend
-- **Runtime**: Node.js (via Next.js API Routes)
-- **Database**: [MongoDB](https://www.mongodb.com/) with Mongoose ODM
-- **Fingerprinting**: Browser fingerprinting for vote tracking
+
+-   **Runtime**: Node.js (via Next.js API Routes)
+-   **Database**: [MongoDB](https://www.mongodb.com/) with Mongoose ODM
+-   **Fingerprinting**: Browser fingerprinting for vote tracking
 
 ### DevOps & Tools
-- **Version Control**: Git
-- **Package Manager**: npm
-- **Linting**: ESLint
-- **Type Checking**: TypeScript
+
+-   **Version Control**: Git
+-   **Package Manager**: npm
+-   **Linting**: ESLint
+-   **Type Checking**: TypeScript
 
 ---
 
@@ -88,33 +156,38 @@
 
 ### Prerequisites
 
-- **Node.js** 18.0 or higher
-- **npm** or **yarn**
-- **MongoDB** database (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
+-   **Node.js** 18.0 or higher
+-   **npm** or **yarn**
+-   **MongoDB** database (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
 
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/letsettle.git
-   cd letsettle
-   ```
+
+    ```bash
+    git clone https://github.com/yourusername/letsettle.git
+    cd letsettle
+    ```
 
 2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+
+    ```bash
+    npm install
+    ```
 
 3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` with your MongoDB connection string.
+
+    ```bash
+    cp .env.example .env.local
+    ```
+
+    Edit `.env.local` with your MongoDB connection string.
 
 4. **Run the development server**
-   ```bash
-   npm run dev
-   ```
+
+    ```bash
+    npm run dev
+    ```
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
@@ -140,16 +213,24 @@ Create a `.env.local` file in the root directory:
 # Required
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/letsettle?retryWrites=true&w=majority
 
+# Admin Authentication (Required for admin panel)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=YourSecurePassword123
+ADMIN_SECRET_TOKEN=GenerateARandomSecureToken456
+
 # Optional (for production)
 NEXT_PUBLIC_APP_URL=https://yoursite.com
 ```
 
 ### Variable Descriptions
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `MONGODB_URI` | MongoDB connection string | ✅ Yes |
-| `NEXT_PUBLIC_APP_URL` | Public URL for share links | No |
+| Variable              | Description                 | Required           |
+| --------------------- | --------------------------- | ------------------ |
+| `MONGODB_URI`         | MongoDB connection string   | ✅ Yes             |
+| `ADMIN_USERNAME`      | Admin panel username        | ✅ Yes (for admin) |
+| `ADMIN_PASSWORD`      | Admin panel password        | ✅ Yes (for admin) |
+| `ADMIN_SECRET_TOKEN`  | Secret token for admin auth | ✅ Yes (for admin) |
+| `NEXT_PUBLIC_APP_URL` | Public URL for share links  | No                 |
 
 ---
 
@@ -158,6 +239,7 @@ NEXT_PUBLIC_APP_URL=https://yoursite.com
 ### Collections
 
 #### **Debates**
+
 ```typescript
 {
   _id: ObjectId,
@@ -175,12 +257,14 @@ NEXT_PUBLIC_APP_URL=https://yoursite.com
 ```
 
 **Indexes**:
-- `slug` (unique)
-- `{ category: 1, totalVotes: -1 }`
-- `{ isActive: 1, totalVotes: -1 }`
-- `{ isActive: 1, createdAt: -1 }`
+
+-   `slug` (unique)
+-   `{ category: 1, totalVotes: -1 }`
+-   `{ isActive: 1, totalVotes: -1 }`
+-   `{ isActive: 1, createdAt: -1 }`
 
 #### **Options**
+
 ```typescript
 {
   _id: ObjectId,
@@ -193,9 +277,11 @@ NEXT_PUBLIC_APP_URL=https://yoursite.com
 ```
 
 **Indexes**:
-- `debateId`
+
+-   `debateId`
 
 #### **Votes**
+
 ```typescript
 {
   _id: ObjectId,
@@ -209,8 +295,9 @@ NEXT_PUBLIC_APP_URL=https://yoursite.com
 ```
 
 **Indexes**:
-- `{ debateId: 1, ip: 1 }` (unique)
-- `{ debateId: 1, fingerprintId: 1 }` (unique)
+
+-   `{ debateId: 1, ip: 1 }` (unique)
+-   `{ debateId: 1, fingerprintId: 1 }` (unique)
 
 ---
 
@@ -219,76 +306,119 @@ NEXT_PUBLIC_APP_URL=https://yoursite.com
 ### Debates
 
 #### `GET /api/debate?category={category}`
+
 Get debates by category.
 
 **Query Params**:
-- `category` (optional): Filter by category
+
+-   `category` (optional): Filter by category
 
 **Response**:
+
 ```json
 {
-  "debates": [
-    {
-      "_id": "...",
-      "title": "Best Programming Language?",
-      "category": "Technology",
-      "totalVotes": 150
-    }
-  ]
+    "debates": [
+        {
+            "_id": "...",
+            "title": "Best Programming Language?",
+            "category": "Technology",
+            "totalVotes": 150
+        }
+    ]
 }
 ```
 
 #### `GET /api/debate/[slug]`
+
 Get single debate with all options.
 
 #### `POST /api/debate`
+
 Create a new debate.
 
 **Body**:
+
 ```json
 {
-  "title": "Debate question",
-  "description": "Optional context",
-  "category": "Technology",
-  "subCategory": "Programming",
-  "options": ["Option 1", "Option 2"],
-  "isMoreOptionAllowed": true
+    "title": "Debate question",
+    "description": "Optional context",
+    "category": "Technology",
+    "subCategory": "Programming",
+    "options": ["Option 1", "Option 2"],
+    "isMoreOptionAllowed": true
 }
 ```
+
+**Status**: Creates debate with "pending" status
 
 ### Voting
 
 #### `POST /api/vote`
+
 Cast or change a vote.
 
 **Body**:
+
 ```json
 {
-  "debateId": "...",
-  "optionId": "...",
-  "fingerprintId": "..."
+    "debateId": "...",
+    "optionId": "...",
+    "fingerprintId": "..."
 }
 ```
 
 **Response**:
+
 ```json
 {
-  "success": true,
-  "isChange": false
+    "success": true,
+    "isChange": false
 }
 ```
 
 ### Options
 
 #### `POST /api/option`
+
 Add a new option to a debate.
 
 **Body**:
+
 ```json
 {
-  "debateId": "...",
-  "name": "New Option"
+    "debateId": "...",
+    "name": "New Option"
 }
+```
+
+### Admin Endpoints
+
+All admin routes require `x-admin-token` header.
+
+#### Authentication
+
+```
+POST /api/admin/auth
+Body: { username, password }
+Returns: { token }
+```
+
+#### Debate Management
+
+```
+GET    /api/admin/debates                    # List all debates
+GET    /api/admin/debates/:id                # Get single debate
+PATCH  /api/admin/debates/:id                # Edit debate
+DELETE /api/admin/debates/:id                # Delete debate + options
+POST   /api/admin/debates/:id/approve        # Approve pending debate
+POST   /api/admin/debates/:id/reject         # Reject debate
+```
+
+#### Options Management
+
+```
+GET    /api/admin/options                    # List all options
+DELETE /api/admin/options/:id                # Delete option
 ```
 
 ---
@@ -299,10 +429,18 @@ Add a new option to a debate.
 letsettle/
 ├── app/                      # Next.js app directory
 │   ├── api/                  # API routes
-│   │   ├── debate/           # Debate endpoints
+│   │   ├── debate/           # Public debate endpoints
 │   │   ├── option/           # Option endpoints
 │   │   ├── vote/             # Voting endpoints
-│   │   └── seed/             # Database seeding
+│   │   └── admin/            # Admin endpoints
+│   │       ├── auth/         # Admin login
+│   │       ├── debates/      # Debate management
+│   │       └── options/      # Option management
+│   ├── admin/                # Admin panel pages
+│   │   ├── login/            # Login page
+│   │   ├── pending/          # Pending queue
+│   │   ├── debates/          # All debates
+│   │   └── options/          # Options management
 │   ├── debate/[slug]/        # Debate detail pages
 │   ├── all-debates/          # Browse all debates
 │   ├── categories/           # Category browser
@@ -311,6 +449,10 @@ letsettle/
 │   ├── page.tsx              # Homepage
 │   └── globals.css           # Design system
 ├── components/               # React components
+│   ├── admin/                # Admin components
+│   │   ├── AdminNav.tsx      # Admin sidebar
+│   │   ├── StatusBadge.tsx   # Status indicator
+│   │   └── EditDebateModal.tsx # Edit modal
 │   ├── AddOptionForm.tsx     # Add option UI
 │   ├── DebateCard.tsx        # Debate preview card
 │   ├── Navbar.tsx            # Navigation
@@ -321,7 +463,9 @@ letsettle/
 │   ├── db.ts                 # MongoDB connection
 │   ├── utils.ts              # Helper functions
 │   ├── types.ts              # TypeScript types
-│   └── constants.ts          # App constants
+│   ├── constants.ts          # App constants
+│   ├── validators.ts         # Input validation
+│   └── adminAuth.ts          # Admin authentication
 ├── models/                   # Mongoose models
 │   ├── Debate.ts
 │   ├── Option.ts
@@ -340,18 +484,19 @@ letsettle/
 ### Deploy to Vercel (Recommended)
 
 1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
+
+    ```bash
+    git add .
+    git commit -m "Initial commit"
+    git push origin main
+    ```
 
 2. **Import to Vercel**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import your GitHub repository
-   - Add environment variable: `MONGODB_URI`
-   - Deploy!
+    - Go to [vercel.com](https://vercel.com)
+    - Click "New Project"
+    - Import your GitHub repository
+    - Add environment variable: `MONGODB_URI`
+    - Deploy!
 
 ### Manual Deployment
 
@@ -377,11 +522,11 @@ Contributions are welcome! Please follow these steps:
 
 ### Development Guidelines
 
-- Follow TypeScript best practices
-- Use meaningful variable and function names
-- Add comments for complex logic
-- Test changes locally before submitting
-- Keep the minimal design aesthetic
+-   Follow TypeScript best practices
+-   Use meaningful variable and function names
+-   Add comments for complex logic
+-   Test changes locally before submitting
+-   Keep the minimal design aesthetic
 
 ---
 
@@ -393,10 +538,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Design inspiration from minimal editorial platforms
-- Icons from [Lucide](https://lucide.dev/)
-- Built with [Next.js](https://nextjs.org/)
-- Database powered by [MongoDB](https://www.mongodb.com/)
+-   Design inspiration from minimal editorial platforms
+-   Icons from [Lucide](https://lucide.dev/)
+-   Built with [Next.js](https://nextjs.org/)
+-   Database powered by [MongoDB](https://www.mongodb.com/)
 
 ---
 
