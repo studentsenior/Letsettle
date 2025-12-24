@@ -2,7 +2,7 @@ import dbConnect from "@/lib/db";
 import Debate from "@/models/Debate";
 import Option from "@/models/Option";
 import DebateCard from "@/components/DebateCard";
-import HeroDebateDemo from "@/components/HeroDebateDemo";
+import Hero from "@/components/Hero";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -38,131 +38,7 @@ export default async function Home() {
     return (
         <div className="pb-20" style={{ paddingTop: "var(--space-3xl)" }}>
             {/* Hero Section - Minimal & Calm */}
-            <section
-                className="pt-8 pb-16 px-6 text-center"
-                style={{
-                    backgroundColor: "var(--color-base-bg)",
-                    borderBottom: "1px solid var(--color-base-border)",
-                }}
-            >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-                    {/* Left: Content */}
-                    <div className="text-left space-y-8">
-                        <h1
-                            className="font-bold tracking-tight leading-none"
-                            style={{
-                                color: "var(--color-text-primary)",
-                                fontSize: "clamp(2.5rem, 5vw, 4rem)",
-                                marginBottom: "var(--space-md)",
-                            }}
-                        >
-                            Settle The
-                            <br />
-                            <span style={{ color: "var(--color-accent)" }}>
-                                Unsettled
-                            </span>
-                        </h1>
-                        <p
-                            className="max-w-xl"
-                            style={{
-                                color: "var(--color-text-secondary)",
-                                fontSize: "var(--font-size-lg)",
-                                lineHeight: "1.6",
-                            }}
-                        >
-                            The public voting platform where opinions turn into
-                            data. Vote on trending debates or start your own.
-                        </p>
-
-                        {/* Search Bar */}
-                        {/* <div className="max-w-md relative group">
-                            <div
-                                className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
-                                style={{ color: "var(--color-text-tertiary)" }}
-                            >
-                                <svg
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                                    />
-                                </svg>
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Search topic..."
-                                className="w-full py-4 pl-12 pr-4 rounded-full outline-none transition-all shadow-sm focus:shadow-md"
-                                style={{
-                                    backgroundColor:
-                                        "var(--color-base-surface)",
-                                    border: "1px solid var(--color-base-border)",
-                                    color: "var(--color-text-primary)",
-                                    fontSize: "var(--font-size-base)",
-                                }}
-                            />
-                        </div> */}
-
-                        <div className="pt-2 flex items-center gap-6">
-                            <Link
-                                href="/create"
-                                className="font-medium transition-opacity hover:opacity-70 flex items-center gap-2"
-                                style={{
-                                    color: "var(--color-accent)",
-                                    fontSize: "var(--font-size-base)",
-                                }}
-                            >
-                                Start a Debate
-                                <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                                    />
-                                </svg>
-                            </Link>
-                            <Link
-                                href="/all-debates"
-                                className="font-medium transition-opacity hover:opacity-70 flex items-center gap-2"
-                                style={{
-                                    fontSize: "var(--font-size-base)",
-                                }}
-                            >
-                                Explore Debates
-                                <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                                    />
-                                </svg>
-                            </Link>
-                        </div>
-                    </div>
-
-                    {/* Right: Live Demo Card */}
-                    <div className="relative hidden lg:block">
-                        <HeroDebateDemo />
-                    </div>
-                </div>
-            </section>
+            <Hero />
 
             {/* Top Debates */}
             <section
