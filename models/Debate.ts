@@ -13,6 +13,7 @@ export interface IDebate extends Document {
     createdBy?: string;
     rejectionReason?: string;
     createdAt: Date;
+    updatedAt: Date;
 }
 
 const DebateSchema: Schema = new Schema(

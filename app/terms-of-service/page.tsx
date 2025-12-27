@@ -1,4 +1,10 @@
-"use client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Terms of Service | Letsettle",
+    description:
+        "Read the terms and conditions for using Letsettle. Understand your rights and responsibilities on our platform.",
+};
 
 export default function TermsOfServicePage() {
     return (

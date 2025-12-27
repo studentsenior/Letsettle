@@ -1,4 +1,10 @@
-"use client";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Privacy Policy | Letsettle",
+    description:
+        "Our commitment to protecting your privacy. Read about how Letsettle collects, uses, and safeguards your data.",
+};
 
 export default function PrivacyPolicyPage() {
     return (
