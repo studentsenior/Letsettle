@@ -137,14 +137,19 @@ export default function CreateDebatePage() {
                 throw new Error(data.error || "Something went wrong");
             }
 
-            setIsSuccess(true);
-            toast.success(data.message || "Debate submitted successfully!");
+            if (data.status === "approved") {
+                toast.success("Created successfully");
+                router.push(`/debate/${data.slug}`);
+            } else {
+                setIsSuccess(true);
+                toast.success("Debate submitted for review.");
 
-            // Redirect to home after delay
-            setTimeout(() => {
-                router.push("/");
-                router.refresh();
-            }, 2000);
+                // Redirect to home after delay
+                setTimeout(() => {
+                    router.push("/");
+                    router.refresh();
+                }, 2000);
+            }
         } catch (err) {
             const msg = (err as Error).message;
             setError(msg);

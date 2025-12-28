@@ -9,6 +9,7 @@ import {
     validateOptions,
     getUserIdentifier,
 } from "@/lib/validators";
+import { moderateContent } from "@/lib/ai-moderator";
 
 export async function GET(request: NextRequest) {
     await dbConnect();
@@ -119,6 +120,13 @@ export async function POST(request: NextRequest) {
         // Get user identifier
         const createdBy = getUserIdentifier(request);
 
+        // Moderate content using AI
+        const initialStatus = await moderateContent(
+            title,
+            description,
+            options
+        );
+
         try {
             const debate = await Debate.create({
                 slug,
@@ -126,7 +134,7 @@ export async function POST(request: NextRequest) {
                 description: description?.trim(),
                 category,
                 subCategory,
-                status: "pending", // Set to pending for moderation
+                status: initialStatus, // Set status based on AI moderation
                 createdBy,
             });
 
@@ -141,8 +149,8 @@ export async function POST(request: NextRequest) {
                 {
                     success: true,
                     slug,
-                    message:
-                        "Debate submitted successfully! It will be visible after admin approval.",
+                    message: "Debate submitted successfully!",
+                    status: initialStatus,
                 },
                 { status: 201 }
             );
