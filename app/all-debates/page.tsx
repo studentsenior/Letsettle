@@ -5,6 +5,8 @@ import DebateCard from "@/components/DebateCard";
 import SortSelector from "@/components/SortSelector";
 import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
+import { Debate as DebateType } from "@/lib/types";
+import { SortOrder } from "mongoose";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,7 @@ async function getAllDebates(page: number, sortBy: string) {
     const skip = (page - 1) * DEBATES_PER_PAGE;
 
     // Define sort options
-    const sortOptions: Record<string, any> = {
+    const sortOptions: Record<string, { [key: string]: SortOrder }> = {
         trending: { totalVotes: -1 },
         newest: { createdAt: -1 },
         "most-voted": { totalVotes: -1 },
@@ -34,7 +36,7 @@ async function getAllDebates(page: number, sortBy: string) {
             .skip(skip)
             .limit(DEBATES_PER_PAGE)
             .select(
-                "slug title description category subCategory totalVotes createdAt"
+                "slug title description category subCategory totalVotes createdAt isActive status isMoreOptionAllowed"
             )
             .lean(),
         Debate.countDocuments({ isActive: true, status: "approved" }),
@@ -48,9 +50,13 @@ async function getAllDebates(page: number, sortBy: string) {
                 .lean();
             return {
                 ...debate,
-                options: topOptions,
                 _id: debate._id.toString(),
-            };
+                createdAt: debate.createdAt.toISOString(),
+                options: topOptions.map((opt) => ({
+                    ...opt,
+                    _id: opt._id.toString(),
+                })),
+            } as DebateType;
         })
     );
 
@@ -188,7 +194,7 @@ export default async function AllDebatesPage({ searchParams }: PageProps) {
                 ) : (
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {debates.map((debate: any) => (
+                            {debates.map((debate) => (
                                 <DebateCard key={debate._id} debate={debate} />
                             ))}
                         </div>

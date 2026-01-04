@@ -84,9 +84,9 @@ export default function AboutClient() {
                         </h2>
                         <div className="space-y-6 text-lg text-[var(--color-text-secondary)] leading-relaxed">
                             <p>
-                                In a world full of noise, it's hard to know what
-                                people really think. Social media comments are
-                                messy, and specialized forums are often echo
+                                In a world full of noise, it&apos;s hard to know
+                                what people really think. Social media comments
+                                are messy, and specialized forums are often echo
                                 chambers.
                             </p>
                             <p>
@@ -96,9 +96,10 @@ export default function AboutClient() {
                                 was built to cut through that noise. We provide
                                 a clean, neutral ground for settling arguments,
                                 validating ideas, or simply satisfying
-                                curiosity. Whether it's a serious policy debate
-                                or a lighthearted preference check, we give you
-                                the tools to measure public opinion accurately.
+                                curiosity. Whether it&apos;s a serious policy
+                                debate or a lighthearted preference check, we
+                                give you the tools to measure public opinion
+                                accurately.
                             </p>
                             <p>
                                 We prioritize simplicity and clarity. No

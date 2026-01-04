@@ -5,6 +5,7 @@ import DebateCard from "@/components/DebateCard";
 import Hero from "@/components/Hero";
 import Link from "next/link";
 import { getFeaturedCategories } from "@/lib/category-config";
+import { Debate as DebateType } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -24,9 +25,13 @@ async function getTopDebates() {
                 .lean();
             return {
                 ...debate,
-                options: topOptions,
                 _id: debate._id.toString(),
-            };
+                createdAt: debate.createdAt.toISOString(),
+                options: topOptions.map((opt) => ({
+                    ...opt,
+                    _id: opt._id.toString(),
+                })),
+            } as DebateType;
         })
     );
 
@@ -108,7 +113,7 @@ export default async function Home() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {topDebates.map((debate: any) => (
+                        {topDebates.map((debate: DebateType) => (
                             <DebateCard key={debate._id} debate={debate} />
                         ))}
                     </div>

@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
         const limit = parseInt(searchParams.get("limit") || "50");
         const skip = (page - 1) * limit;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const query: any = {};
         if (debateId) {
             query.debateId = debateId;
@@ -40,6 +41,8 @@ export async function GET(request: NextRequest) {
                     .lean();
                 return {
                     ...option,
+                    _id: option._id.toString(),
+                    createdAt: option.createdAt.toISOString(),
                     debateTitle: debate?.title || "Unknown Debate",
                     debateSlug: debate?.slug || "",
                 };
@@ -56,6 +59,7 @@ export async function GET(request: NextRequest) {
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error fetching options:", error);
         return NextResponse.json(
             { error: "Failed to fetch options" },
             { status: 500 }

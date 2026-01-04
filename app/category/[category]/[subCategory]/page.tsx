@@ -5,6 +5,7 @@ import Option from "@/models/Option";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
+import { Debate as DebateType } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -36,9 +37,13 @@ async function getDebatesBySubCategory(category: string, subCategory: string) {
                 .lean();
             return {
                 ...debate,
-                options: topOptions,
                 _id: debate._id.toString(),
-            };
+                createdAt: debate.createdAt.toISOString(),
+                options: topOptions.map((opt) => ({
+                    ...opt,
+                    _id: opt._id.toString(),
+                })),
+            } as DebateType;
         })
     );
 
@@ -95,7 +100,7 @@ export default async function SubCategoryPage({ params }: PageProps) {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {debates.map((debate: any) => (
+                    {debates.map((debate) => (
                         <DebateCard key={debate._id} debate={debate} />
                     ))}
                 </div>

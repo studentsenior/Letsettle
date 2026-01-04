@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 export default function MagicSkeleton() {
     return (
         <div className="space-y-6 animate-pulse">

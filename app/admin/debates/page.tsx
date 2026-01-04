@@ -56,10 +56,6 @@ export default function AllDebatesPage() {
         });
     };
 
-    useEffect(() => {
-        fetchDebates();
-    }, [statusFilter, currentPage, search]);
-
     const fetchDebates = async () => {
         try {
             const token = localStorage.getItem("adminToken");
@@ -78,11 +74,16 @@ export default function AllDebatesPage() {
             setTotal(data.total || 0);
             setTotalPages(data.totalPages || 1);
         } catch (error) {
+            console.error("Error fetching debates:", error);
             toast.error("Failed to fetch debates");
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchDebates();
+    }, [statusFilter, currentPage, search]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -118,6 +119,7 @@ export default function AllDebatesPage() {
             toast.success("Debate deleted");
             fetchDebates();
         } catch (error) {
+            console.error("Error deleting debate:", error);
             toast.error("Failed to delete debate");
         }
     };

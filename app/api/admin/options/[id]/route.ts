@@ -31,6 +31,7 @@ export async function DELETE(
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error deleting option:", error);
         return NextResponse.json(
             { error: "Failed to delete option" },
             { status: 500 }

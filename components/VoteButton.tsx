@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useFingerprint } from "@/lib/hooks/useFingerprint";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface VoteButtonProps {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
-import Debate from "@/models/Debate";
+import Debate, { IDebate } from "@/models/Debate";
 import Option from "@/models/Option";
 import { requireAdmin } from "@/lib/adminAuth";
 
@@ -26,8 +26,23 @@ export async function GET(
 
         const options = await Option.find({ debateId: params.id }).lean();
 
-        return NextResponse.json({ ...debate, options }, { status: 200 });
+        return NextResponse.json(
+            {
+                ...debate,
+                _id: debate._id.toString(),
+                createdAt: debate.createdAt.toISOString(),
+                updatedAt: debate.updatedAt.toISOString(),
+                options: options.map((opt) => ({
+                    ...opt,
+                    _id: opt._id.toString(),
+                    createdAt: opt.createdAt.toISOString(),
+                    updatedAt: opt.updatedAt?.toISOString(),
+                })),
+            },
+            { status: 200 }
+        );
     } catch (error) {
+        console.error("Error fetching debate:", error);
         return NextResponse.json(
             { error: "Failed to fetch debate" },
             { status: 500 }
@@ -58,7 +73,7 @@ export async function PATCH(
             rejectionReason,
         } = body;
 
-        const updateData: any = {};
+        const updateData: Partial<IDebate> = {};
         if (title !== undefined) updateData.title = title;
         if (description !== undefined) updateData.description = description;
         if (category !== undefined) updateData.category = category;
@@ -83,6 +98,7 @@ export async function PATCH(
 
         return NextResponse.json({ success: true, debate }, { status: 200 });
     } catch (error) {
+        console.error("Error updating debate:", error);
         return NextResponse.json(
             { error: "Failed to update debate" },
             { status: 500 }
@@ -123,6 +139,7 @@ export async function DELETE(
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error deleting debate:", error);
         return NextResponse.json(
             { error: "Failed to delete debate" },
             { status: 500 }

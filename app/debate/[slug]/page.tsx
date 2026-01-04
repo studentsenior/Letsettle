@@ -9,13 +9,16 @@ import RelatedDebates from "@/components/RelatedDebates";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { formatDistanceToNow } from "date-fns";
+import { Debate as DebateType, Option as OptionType } from "@/lib/types";
 
 interface PageProps {
     params: { slug: string };
 }
 export const dynamic = "force-dynamic";
 
-async function getDebate(slug: string) {
+async function getDebate(
+    slug: string
+): Promise<(DebateType & { relatedDebates: DebateType[] }) | null> {
     await dbConnect();
     const debate = await Debate.findOne({ slug }).lean();
     if (!debate) return null;
@@ -23,11 +26,6 @@ async function getDebate(slug: string) {
     const options = await Option.find({ debateId: debate._id })
         .sort({ votes: -1 })
         .lean();
-
-    // Note: getDebate runs on server component, but we need to fetch related debates.
-    // However, the related debates are fetched in the API route, but for the SERVER COMPONENT page load,
-    // we need to fetch them here or via an internal API call.
-    // Since we are inside a Server Component, we should just query the DB directly here too!
 
     const relatedDebates = await Debate.find({
         _id: { $ne: debate._id },
@@ -44,16 +42,21 @@ async function getDebate(slug: string) {
         .lean();
 
     // Convert ObjectIds to strings for serialization
-    const serializedRelated = relatedDebates.map((d) => ({
+    const serializedRelated: DebateType[] = relatedDebates.map((d) => ({
         ...d,
         _id: d._id.toString(),
         createdAt: d.createdAt.toISOString(),
+        options: [], // Related debates in this view don't need full options list usually, or add them if needed
     }));
 
     return {
         ...debate,
-        options,
         _id: debate._id.toString(),
+        createdAt: debate.createdAt.toISOString(),
+        options: options.map((opt) => ({
+            ...opt,
+            _id: opt._id.toString(),
+        })),
         relatedDebates: serializedRelated,
     };
 }
@@ -160,11 +163,11 @@ export default async function DebatePage({ params }: PageProps) {
                     Current Rankings
                 </h2>
                 <div className="space-y-4">
-                    {debate.options.map((opt: any, index: number) => (
+                    {debate.options.map((opt: OptionType, index: number) => (
                         <VoteButton
-                            key={opt._id.toString()}
+                            key={opt._id}
                             debateId={debate._id}
-                            optionId={opt._id.toString()}
+                            optionId={opt._id}
                             optionName={opt.name}
                             initialVotes={opt.votes}
                             totalVotes={debate.totalVotes}
@@ -213,7 +216,7 @@ export default async function DebatePage({ params }: PageProps) {
                         "@context": "https://schema.org",
                         "@type": "ItemList",
                         itemListElement: debate.options.map(
-                            (opt: any, index: number) => ({
+                            (opt: OptionType, index: number) => ({
                                 "@type": "ListItem",
                                 position: index + 1,
                                 name: opt.name,
@@ -226,7 +229,7 @@ export default async function DebatePage({ params }: PageProps) {
                 }}
             />
 
-            <RelatedDebates debates={(debate as any).relatedDebates} />
+            <RelatedDebates debates={debate.relatedDebates} />
         </div>
     );
 }

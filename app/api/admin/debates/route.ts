@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
         const skip = (page - 1) * limit;
 
-        // Build query
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const query: any = {};
 
         if (status !== "all") {
@@ -54,7 +54,13 @@ export async function GET(request: NextRequest) {
                 const optionCount = await Option.countDocuments({
                     debateId: debate._id,
                 });
-                return { ...debate, optionCount };
+                return {
+                    ...debate,
+                    _id: debate._id.toString(),
+                    createdAt: debate.createdAt.toISOString(),
+                    updatedAt: debate.updatedAt?.toISOString(),
+                    optionCount,
+                };
             })
         );
 
@@ -68,6 +74,7 @@ export async function GET(request: NextRequest) {
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error fetching debates:", error);
         return NextResponse.json(
             { error: "Failed to fetch debates" },
             { status: 500 }

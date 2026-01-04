@@ -36,6 +36,7 @@ export async function POST(
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error approving debate:", error);
         return NextResponse.json(
             { error: "Failed to approve debate" },
             { status: 500 }

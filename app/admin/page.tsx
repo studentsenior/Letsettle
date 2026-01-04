@@ -77,6 +77,7 @@ export default function AdminDashboard() {
                 rejected: rejectedData.total || 0,
             });
         } catch (error) {
+            console.error("Error fetching stats:", error);
             toast.error("Failed to fetch stats");
         } finally {
             setLoading(false);

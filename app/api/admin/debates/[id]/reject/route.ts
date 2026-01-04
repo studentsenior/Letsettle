@@ -42,6 +42,7 @@ export async function POST(
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error rejecting debate:", error);
         return NextResponse.json(
             { error: "Failed to reject debate" },
             { status: 500 }

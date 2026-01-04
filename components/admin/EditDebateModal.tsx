@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { CATEGORIES } from "@/lib/constants";
 
@@ -193,7 +192,10 @@ export default function EditDebateModal({
                             onChange={(e) =>
                                 setFormData({
                                     ...formData,
-                                    status: e.target.value as any,
+                                    status: e.target.value as
+                                        | "pending"
+                                        | "approved"
+                                        | "rejected",
                                 })
                             }
                             className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white"

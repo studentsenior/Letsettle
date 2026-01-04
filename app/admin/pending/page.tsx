@@ -64,6 +64,7 @@ export default function PendingDebatesPage() {
             const data = await res.json();
             setDebates(data.debates || []);
         } catch (error) {
+            console.error("Error fetching debates:", error);
             toast.error("Failed to fetch debates");
         } finally {
             setLoading(false);
@@ -83,6 +84,7 @@ export default function PendingDebatesPage() {
             toast.success("Debate approved");
             fetchDebates();
         } catch (error) {
+            console.error("Error approving debate:", error);
             toast.error("Failed to approve debate");
         }
     };
@@ -112,6 +114,7 @@ export default function PendingDebatesPage() {
             setSelectedDebate(null);
             fetchDebates();
         } catch (error) {
+            console.error("Error rejecting debate:", error);
             toast.error("Failed to reject debate");
         }
     };

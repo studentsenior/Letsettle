@@ -14,11 +14,6 @@ interface Option {
     debateSlug?: string;
 }
 
-interface DebateGroup {
-    debateId: string;
-    options: Option[];
-}
-
 export default function OptionsPage() {
     const [options, setOptions] = useState<Option[]>([]);
     const [loading, setLoading] = useState(true);
@@ -46,6 +41,7 @@ export default function OptionsPage() {
             setTotal(data.total || 0);
             setTotalPages(data.totalPages || 1);
         } catch (error) {
+            console.error("Error fetching options:", error);
             toast.error("Failed to fetch options");
         } finally {
             setLoading(false);
@@ -67,6 +63,7 @@ export default function OptionsPage() {
             toast.success("Option deleted");
             fetchOptions();
         } catch (error) {
+            console.error("Error deleting option:", error);
             toast.error("Failed to delete option");
         }
     };

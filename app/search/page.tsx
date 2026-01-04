@@ -4,6 +4,7 @@ import Option from "@/models/Option";
 import DebateCard from "@/components/DebateCard";
 import SearchBar from "@/components/SearchBar";
 import Link from "next/link";
+import { Debate as DebateType } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -43,9 +44,13 @@ async function searchDebates(query: string) {
                 .lean();
             return {
                 ...debate,
-                options: topOptions,
                 _id: debate._id.toString(),
-            };
+                createdAt: debate.createdAt.toISOString(),
+                options: topOptions.map((opt) => ({
+                    ...opt,
+                    _id: opt._id.toString(),
+                })),
+            } as DebateType;
         })
     );
 
@@ -169,7 +174,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
                 ) : (
                     // Results found
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {results.map((debate: any) => (
+                        {results.map((debate) => (
                             <DebateCard key={debate._id} debate={debate} />
                         ))}
                     </div>

@@ -48,6 +48,7 @@ export async function GET(
             { status: 200 }
         );
     } catch (error) {
+        console.error("Error fetching debate:", error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 }
