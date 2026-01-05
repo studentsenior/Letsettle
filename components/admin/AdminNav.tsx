@@ -10,6 +10,7 @@ import {
     LogOut,
     Menu,
     X,
+    BarChart3,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -18,6 +19,7 @@ const NAV_ITEMS = [
     { label: "Pending Debates", href: "/admin/pending", icon: Clock },
     { label: "All Debates", href: "/admin/debates", icon: List },
     { label: "Options", href: "/admin/options", icon: Settings },
+    { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
 ];
 
 export default function AdminNav() {

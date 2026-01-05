@@ -21,6 +21,7 @@ interface Debate {
     rejectionReason?: string;
     createdAt: string;
     optionCount: number;
+    views: number;
 }
 
 export default function AllDebatesPage() {
@@ -79,7 +80,7 @@ export default function AllDebatesPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }; // eslint-disable-next-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         fetchDebates();
@@ -193,6 +194,9 @@ export default function AllDebatesPage() {
                                     Votes
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Views
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Created
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -228,6 +232,9 @@ export default function AllDebatesPage() {
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-900">
                                         {debate.totalVotes}
+                                    </td>
+                                    <td className="px-6 py-4 text-sm text-gray-900 font-mono-numbers">
+                                        {debate.views || 0}
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-500">
                                         {new Date(

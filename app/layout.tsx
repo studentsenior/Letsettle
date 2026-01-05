@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { cn } from "@/lib/utils";
+import SiteTracker from "@/components/analytics/SiteTracker";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -102,6 +103,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={cn(inter.className, "min-h-screen")}>
+                <SiteTracker />
                 <ErrorBoundary>
                     <Navbar />
                     <main className="min-h-[calc(100vh-64px)]">{children}</main>

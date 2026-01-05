@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Trash2, ExternalLink, Package } from "lucide-react";
 import { toast } from "sonner";
 
@@ -21,11 +21,7 @@ export default function OptionsPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [total, setTotal] = useState(0);
 
-    useEffect(() => {
-        fetchOptions();
-    }, [currentPage]);
-
-    const fetchOptions = async () => {
+    const fetchOptions = useCallback(async () => {
         try {
             const token = localStorage.getItem("adminToken");
             const params = new URLSearchParams();
@@ -46,7 +42,11 @@ export default function OptionsPage() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [currentPage]);
+
+    useEffect(() => {
+        fetchOptions();
+    }, [fetchOptions]);
 
     const handleDelete = async (id: string) => {
         if (!confirm("Are you sure you want to delete this option?")) return;

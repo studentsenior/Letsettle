@@ -6,6 +6,7 @@ import AddOptionForm from "@/components/AddOptionForm";
 import ShareButton from "@/components/ShareButton";
 import AdminEditButton from "@/components/AdminEditButton";
 import RelatedDebates from "@/components/RelatedDebates";
+import DebateTracker from "@/components/analytics/DebateTracker";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { formatDistanceToNow } from "date-fns";
@@ -84,6 +85,7 @@ export default async function DebatePage({ params }: PageProps) {
 
     return (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+            <DebateTracker debateId={debate._id} />
             {/* Header */}
             <div className="mb-12">
                 <div
