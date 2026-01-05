@@ -128,10 +128,6 @@ export function validateOption(option: string): ValidationResult {
         };
     }
 
-    if (hasExcessiveCaps(trimmed)) {
-        return { valid: false, error: "Option has too many capital letters" };
-    }
-
     return { valid: true };
 }
 

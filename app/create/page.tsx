@@ -88,6 +88,7 @@ export default function CreateDebatePage() {
                 description: data.description,
                 category: data.category,
                 subCategory: data.subCategory,
+                isMoreOptionAllowed: data.isMoreOptionAllowed,
             }));
             setOptions(data.options);
             toast.success("Form auto-filled with AI magic! ✨");

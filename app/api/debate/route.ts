@@ -61,7 +61,14 @@ export async function POST(request: NextRequest) {
 
     try {
         const body = await request.json();
-        const { title, description, category, subCategory, options } = body;
+        const {
+            title,
+            description,
+            category,
+            subCategory,
+            options,
+            isMoreOptionAllowed,
+        } = body;
 
         // Basic validation
         if (
@@ -138,6 +145,7 @@ export async function POST(request: NextRequest) {
                 status: initialStatus, // Set status based on AI moderation
                 tags, // Add AI generated tags
                 createdBy,
+                isMoreOptionAllowed,
             });
 
             const optionDocs = options.map((optName: string) => ({
