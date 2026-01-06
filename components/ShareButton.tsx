@@ -16,9 +16,18 @@ import { motion, AnimatePresence } from "framer-motion";
 interface ShareButtonProps {
     title: string;
     slug: string;
+    description?: string;
+    totalVotes?: number;
+    category?: string;
 }
 
-export default function ShareButton({ title, slug }: ShareButtonProps) {
+export default function ShareButton({
+    title,
+    slug,
+    description = "",
+    totalVotes = 0,
+    category = "",
+}: ShareButtonProps) {
     const [showShareMenu, setShowShareMenu] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -27,8 +36,49 @@ export default function ShareButton({ title, slug }: ShareButtonProps) {
             ? `${window.location.origin}/debate/${slug}`
             : "";
 
+    // Create engaging share text with context
+    const createShareText = (
+        platform: "twitter" | "facebook" | "linkedin" | "whatsapp"
+    ) => {
+        let text = title;
+
+        // Add description snippet for platforms that support longer text
+        if (
+            description &&
+            (platform === "linkedin" || platform === "whatsapp")
+        ) {
+            const shortDesc =
+                description.length > 100
+                    ? description.substring(0, 100) + "..."
+                    : description;
+            text += `\n\n${shortDesc}`;
+        }
+
+        // Add engagement context
+        if (totalVotes > 0) {
+            text += `\n\n🗳️ ${totalVotes.toLocaleString()} votes and counting!`;
+        }
+
+        // Add category for context
+        if (category && platform !== "twitter") {
+            text += `\n📁 ${category}`;
+        }
+
+        // Add call-to-action
+        const cta =
+            platform === "twitter"
+                ? "\n\nVote now on Letsettle! 👇"
+                : "\n\nCast your vote and see live results! 👇";
+        text += cta;
+
+        return text;
+    };
+
     const encodedUrl = encodeURIComponent(shareUrl);
-    const encodedTitle = encodeURIComponent(title);
+
+    // Create platform-specific share texts
+    const twitterText = encodeURIComponent(createShareText("twitter"));
+    const whatsappText = encodeURIComponent(createShareText("whatsapp"));
 
     const handleCopyLink = async () => {
         try {
@@ -42,10 +92,10 @@ export default function ShareButton({ title, slug }: ShareButtonProps) {
     };
 
     const shareLinks = {
-        twitter: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
-        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-        whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
+        twitter: `https://twitter.com/intent/tweet?text=${twitterText}&url=${encodedUrl}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, // Facebook uses OG tags
+        linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, // LinkedIn uses OG tags
+        whatsapp: `https://wa.me/?text=${whatsappText}%20${encodedUrl}`,
     };
 
     const socialButtons = [

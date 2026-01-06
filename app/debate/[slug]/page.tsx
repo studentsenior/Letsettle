@@ -141,7 +141,13 @@ export default async function DebatePage({ params }: PageProps) {
 
                     <div className="flex items-center gap-2">
                         <AdminEditButton debateTitle={debate.title} />
-                        <ShareButton title={debate.title} slug={params.slug} />
+                        <ShareButton
+                            title={debate.title}
+                            slug={params.slug}
+                            description={debate.description}
+                            totalVotes={debate.totalVotes}
+                            category={debate.category}
+                        />
                     </div>
                 </div>
             </div>
